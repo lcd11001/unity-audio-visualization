@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AudioPeerMode
+{
+    SAMPLE,
+    FREQUENCY_BAND,
+    BAND_BUFFER
+}
+
 [RequireComponent(typeof(AudioSource))]
 public class AudioPeer : MonoBehaviour
 {
@@ -9,6 +16,8 @@ public class AudioPeer : MonoBehaviour
 
     static public float[] _samples = new float[512];
     static public float[] _freqBand = new float[8];
+    static public float[] _bandBuffer = new float[8];
+    float[] _bufferDecrease = new float[8];
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +30,7 @@ public class AudioPeer : MonoBehaviour
     {
         GetSpectrumAudioSource();
         MakeFrequencyBands();
+        BandBuffer();
     }
 
     void GetSpectrumAudioSource()
@@ -74,6 +84,24 @@ public class AudioPeer : MonoBehaviour
             average /= count;
 
             _freqBand[i] = average * 10;
+        }
+    }
+
+    void BandBuffer()
+    {
+        for (int g = 0; g < 8; g++)
+        {
+            if (_freqBand[g] > _bandBuffer[g])
+            {
+                _bandBuffer[g] = _freqBand[g];
+                _bufferDecrease[g] = 0.005f;
+            }
+
+            if (_freqBand[g] < _bandBuffer[g])
+            {
+                _bandBuffer[g] -= _bufferDecrease[g];
+                _bufferDecrease[g] *= 1.2f;
+            }
         }
     }
 }

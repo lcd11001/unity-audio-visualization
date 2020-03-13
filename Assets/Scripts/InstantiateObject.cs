@@ -9,7 +9,7 @@ public class InstantiateObject : MonoBehaviour
     public float _radius;
     public float _maxScale;
 
-    public bool useAudioPeerSamples;
+    public AudioPeerMode _AudioPeerMode;
 
     GameObject[] _samples;
 
@@ -47,13 +47,17 @@ public class InstantiateObject : MonoBehaviour
         {
             if (_samples != null)
             {
-                if (useAudioPeerSamples)
+                if (_AudioPeerMode == AudioPeerMode.SAMPLE)
                 {
                     _samples[i].transform.localScale = new Vector3(1, (AudioPeer._samples[i] * _maxScale) + 2, 1);
                 }
-                else
+                else if (_AudioPeerMode == AudioPeerMode.FREQUENCY_BAND)
                 {
                     _samples[i].transform.localScale = new Vector3(1, (AudioPeer._freqBand[i] * _maxScale) + 2, 1);
+                }
+                else if (_AudioPeerMode == AudioPeerMode.BAND_BUFFER)
+                {
+                    _samples[i].transform.localScale = new Vector3(1, (AudioPeer._bandBuffer[i] * _maxScale) + 2, 1);
                 }
             }
         }
