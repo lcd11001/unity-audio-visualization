@@ -9,6 +9,8 @@ public class InstantiateObject : MonoBehaviour
     public float _radius;
     public float _maxScale;
 
+    public bool useAudioPeerSamples;
+
     GameObject[] _samples;
 
     private void Awake()
@@ -45,7 +47,14 @@ public class InstantiateObject : MonoBehaviour
         {
             if (_samples != null)
             {
-                _samples[i].transform.localScale = new Vector3(1, (AudioPeer._samples[i] * _maxScale) + 2, 1);
+                if (useAudioPeerSamples)
+                {
+                    _samples[i].transform.localScale = new Vector3(1, (AudioPeer._samples[i] * _maxScale) + 2, 1);
+                }
+                else
+                {
+                    _samples[i].transform.localScale = new Vector3(1, (AudioPeer._freqBand[i] * _maxScale) + 2, 1);
+                }
             }
         }
     }
